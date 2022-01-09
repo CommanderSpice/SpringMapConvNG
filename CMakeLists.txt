@@ -22,7 +22,7 @@ if(PREFER_STATIC_LIBS) # inside spring build
 	set(LINKLIBS ${PNG_LIBRARY_RELEASE} ${TIFF_LIBRARY_RELEASE} ${JPEG_LIBRARY} ${ZLIB_LIBRARY_RELEASE})
 	set_target_properties(mapcompile PROPERTIES LINK_FLAGS "-static" )
 	set_target_properties(mapdecompile PROPERTIES LINK_FLAGS "-static" )
-endif()
+endif ()
 
 target_link_libraries(mapcompile ${IL_LIBRARIES} ${ILU_LIBRARIES} ${LINKLIBS})
 target_link_libraries(mapdecompile ${IL_LIBRARIES} ${ILU_LIBRARIES} ${LINKLIBS})
@@ -30,7 +30,7 @@ target_link_libraries(mapdecompile ${IL_LIBRARIES} ${ILU_LIBRARIES} ${LINKLIBS})
 
 if (DEFINED BINDIR)
 	install(TARGETS mapcompile mapdecompile RUNTIME DESTINATION ${BINDIR})
-else()
+else ()
 	install(TARGETS mapcompile mapcompile RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-endif()
+endif ()
 
