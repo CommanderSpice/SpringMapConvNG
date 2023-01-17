@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.3)
 
 set (CMAKE_CXX_STANDARD 11)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(IL REQUIRED IL)
 pkg_check_modules(ILU REQUIRED ILU)
 
 
@@ -26,12 +25,10 @@ foreach(target mapcompile mapdecompile)
 
 	target_link_libraries(${target}
 		PRIVATE
-			${IL_LINK_LIBRARIES}
 			${ILU_LINK_LIBRARIES}
 	)
 	target_include_directories(${target}
 		PRIVATE
-			${IL_INCLUDE_DIRS}
 			${ILU_INCLUDE_DIRS}
 	)
 endforeach()
