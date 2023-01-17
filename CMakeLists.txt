@@ -2,10 +2,10 @@ project(SpringMapConvNG)
 cmake_minimum_required(VERSION 3.3)
 
 set (CMAKE_CXX_STANDARD 11)
-find_package(DevIL REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(IL REQUIRED IL)
+pkg_check_modules(ILU REQUIRED ILU)
 
-
-include_directories(${IL_INCLUDE_DIR})
 
 set(MAPCONV_FILES
 	src/CRC.cpp
@@ -14,18 +14,27 @@ set(MAPCONV_FILES
 	src/TileStorage.cpp
 )
 
+
 add_executable(mapcompile src/mapcompile.cpp ${MAPCONV_FILES})
 add_executable(mapdecompile src/mapdecompile.cpp ${MAPCONV_FILES})
 
-if(PREFER_STATIC_LIBS) # inside spring build
-	add_definitions(-DIL_STATIC_LIB)
-	set(LINKLIBS ${PNG_LIBRARY_RELEASE} ${TIFF_LIBRARY_RELEASE} ${JPEG_LIBRARY} ${ZLIB_LIBRARY_RELEASE})
-	set_target_properties(mapcompile PROPERTIES LINK_FLAGS "-static" )
-	set_target_properties(mapdecompile PROPERTIES LINK_FLAGS "-static" )
-endif ()
+foreach(target mapcompile mapdecompile)
+	if(PREFER_STATIC_LIBS) # inside spring build
+		target_compile_definitions(${target} PRIVATE IL_STATIC_LIB)
+		set_target_properties(${target} PROPERTIES LINK_FLAGS "-static" )
+	endif ()
 
-target_link_libraries(mapcompile ${IL_LIBRARIES} ${ILU_LIBRARIES} ${LINKLIBS})
-target_link_libraries(mapdecompile ${IL_LIBRARIES} ${ILU_LIBRARIES} ${LINKLIBS})
+	target_link_libraries(${target}
+		PRIVATE
+			${IL_LINK_LIBRARIES}
+			${ILU_LINK_LIBRARIES}
+	)
+	target_include_directories(${target}
+		PRIVATE
+			${IL_INCLUDE_DIRS}
+			${ILU_INCLUDE_DIRS}
+	)
+endforeach()
 
 
 if (DEFINED BINDIR)
