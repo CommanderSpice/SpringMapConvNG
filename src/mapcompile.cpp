@@ -9,7 +9,9 @@
 #include <stdlib.h>
 void help(char** argv)
 {
-	std::cout << "Usage: " << argv[0] << " -t [maintexture] -m [metalmap] -z [typemap] -h [heightmap] -maxh [white height value] -minh [black height value] -o [outputsuffix] -minimap [minimap_image]" << std::endl;
+	std::cout << "Usage: " << std::endl;
+	std::cout << argv[0] << " --help" << std::endl;
+	std::cout << argv[0] << " -t [maintexture] -m [metalmap] -z [typemap] -h [heightmap] -maxh [white height value] -minh [black height value] -o [outputsuffix] -minimap [minimap_image]" << std::endl;
 	std::cout << " -ct [compression_type] -ccount [compare_tilecount] -th [compression_level] -features [featurefile]" << std::endl;
 	std::cout << " -noclamp disables heightmap clamping to max - min values , you should avoid using that , cause you lose precision, if you want less high landscape use maxh and minh" << std::endl;
 	std::cout << "Compression types:\n\t1: No compression \n\t2: Fast compression , compare tile with last -ccount tiles , take first which difference is below -th\n\t3: Insane Compression: compare each tile with whole map , it is very SLOW, not recomended\n\t4: High quality Fast compression: Slightly slower than 2 , it searchs for less different tile in last -ccount tiles" << std::endl;
@@ -45,7 +47,9 @@ int main(int argc, char** argv)
 		for (int i = 1; i < argc; i++) {
 			if (strlen(argv[i]) > 1) {
 				if (argv[i][0] == '-') {
-					if (strcmp(&argv[i][1], "t") == 0) {
+					if (strcmp(&argv[i][1], "-help") == 0) {
+						goto help;
+					} else if (strcmp(&argv[i][1], "t") == 0) {
 						valid1 = true;
 						if (i + 1 < argc) {
 							texture = argv[++i];
@@ -171,6 +175,9 @@ int main(int argc, char** argv)
 	error:
 		help(argv);
 		return 1;
+	help:
+		help(argv);
+		return 0;
 	success:
 		SMFMap* m = new SMFMap(outputname, texture);
 		m->SetBlur(smooth);

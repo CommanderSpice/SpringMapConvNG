@@ -15,7 +15,9 @@
 #endif
 void help(char** argv)
 {
-	std::cout << "Usage: " << argv[0] << " -directory [directory where .smt files are] -mapfile [name of the smf file , NOT path ]" << std::endl;
+	std::cout << "Usage: " << std::endl;
+	std::cout << argv[0] << " --help" << std::endl;
+	std::cout << argv[0] << " -directory [directory where .smt files are] -mapfile [name of the smf file , NOT path ]" << std::endl;
 }
 int main(int argc, char** argv)
 {
@@ -31,7 +33,9 @@ int main(int argc, char** argv)
 		for (int i = 1; i < argc; i++) {
 			if (strlen(argv[i]) > 1) {
 				if (argv[i][0] == '-') {
-					if (strcmp(&argv[i][1], "directory") == 0) {
+					if (strcmp(&argv[i][1], "-help") == 0) {
+						goto help;
+					} else if (strcmp(&argv[i][1], "directory") == 0) {
 						valid1 = true;
 						if (i + 1 < argc) {
 							mapdirectory = argv[++i];
@@ -59,6 +63,9 @@ int main(int argc, char** argv)
 	error:
 		help(argv);
 		return 1;
+	help:
+		help(argv);
+		return 0;
 	success:
 #ifndef WIN32
 		if (chdir(mapdirectory.c_str()))
